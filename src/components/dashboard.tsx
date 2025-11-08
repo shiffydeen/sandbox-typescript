@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { useEffect, useState } from "react"
 import { API_KEY } from "../apifunctions"
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom"
 
-function Dashboard() {
+function Dashboard({favorites, removeFavorite}) {
 
   // const [isLoading, setIsLoading] = useState(false);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
@@ -16,6 +17,8 @@ function Dashboard() {
   const [forecast, setForecast] = useState(null);
   const [location, setLocation] = useState(null);
   const [locationInfo, setLocationInfo] = useState(null)
+
+  const navigate= useNavigate()
 
 
   const temp = weatherData?.main?.temp ?? 0;
@@ -86,7 +89,9 @@ function Dashboard() {
   const nextDays = Object.values(dailyForecasts || {}).slice(1, 6);
 
  
-  
+  function handleClick(city) {
+    navigate(`/city/${city.name}?lat=${city.lat}&lon=${city.lon}`)
+  }
 
   async function fetchWeather() {
     try {
@@ -150,11 +155,7 @@ function Dashboard() {
     if(!coordinates) return
     fetchForecast()
     fetchWeather()
-  }, [coordinates])
-
-  useEffect(() => {
-    if (!coordinates) return
-    getLocationName();
+     getLocationName();
   }, [coordinates])
 
 
@@ -164,61 +165,48 @@ function Dashboard() {
 
   return (
     <>
-      
         <div className="space-y-4">
+          {favorites.length > 0 && (
+            <>
           <h1 className="font-bold text-xl tracking-tighter">Favorites</h1>
-          <div className="flex gap-4">
-            <div className="relative flex min-w-[250px] cursor-pointer items-center gap-3 rounded-lg border bg-card p-4 pr-8 shadow-sm transition-all hover:shadow-md"
-            role="button">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1 h-6 w-6 rounded-full p-0  hover:text-destructive-foreground group-hover:opacity-100"
-              >
-                <X className="h-4 w-4"/>
-              </Button>
-                <div>
-                  <img src="" alt="" />
-                  <div>
-                    <p className="font-medium">Abu</p>
-                    <p className="text-xs text-muted-foreground">JP</p>
-                  </div>
-                </div>
-                <div className="ml-auto text-right">
-                  <p className="text-xl font-bold">11°</p>
-                  <p className="text-xs capitalize text-muted-foreground">Clear Sky</p>
-                </div>
-              
+            <div className="flex gap-4">
+              {
+                favorites.map((city) => (
+                    <div 
+                      className="relative flex min-w-[250px] cursor-pointer items-center gap-3 rounded-lg border bg-card p-4 pr-8 shadow-sm transition-all hover:shadow-md"
+                      role="button"
+                      onClick={() => handleClick(city)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1 h-6 w-6 rounded-full p-0  hover:text-destructive-foreground group-hover:opacity-100"
+                          onClick={() => removeFavorite(city.lat, city.lon)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      <div>
+                        <img src="" alt="" />
+                        <div>
+                          <p className="font-medium">{city.name}</p>
+                          <p className="text-xs text-muted-foreground">JP</p>
+                        </div>
+                      </div>
+                      <div className="ml-auto text-right">
+                        <p className="text-xl font-bold">11°</p>
+                        <p className="text-xs capitalize text-muted-foreground">Clear Sky</p>
+                      </div>
+                    </div>
+                ))
+              }
             </div>
-            <div className="relative flex min-w-[250px] cursor-pointer items-center gap-3 rounded-lg border bg-card p-4 pr-8 shadow-sm transition-all hover:shadow-md"
-            role="button">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1 h-6 w-6 rounded-full p-0  hover:text-destructive-foreground group-hover:opacity-100"
-              >
-                <X className="h-4 w-4"/>
-              </Button>
-                <div>
-                  <img src="" alt="" />
-                  <div>
-                    <p className="font-medium">Abu</p>
-                    <p className="text-xs text-muted-foreground">JP</p>
-                  </div>
-                </div>
-                <div className="ml-auto text-right">
-                  <p className="text-xl font-bold">11°</p>
-                  <p className="text-xs capitalize text-muted-foreground">Clear Sky</p>
-                </div>
-              
-            </div>
-          </div>
+              </>
+          )}
+          
           <div className="flex justify-between">
             <h1 className="tracking-tighter font-bold text-xl">My Location</h1>
             <Button
               variant="outline"
               size="icon"
-
             >
               <RefreshCcw className="h-4 w-4"/>
             </Button>

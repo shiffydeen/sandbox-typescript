@@ -6,7 +6,7 @@ import { ArrowDown, ArrowUp, Compass, Droplets, Gauge, Star, Sunrise, Sunset, Wi
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-export default function CityPage({favorites, addFavorite}) {
+export default function CityPage({favorites, addFavorite, removeFavorite}) {
     const params = useParams();
     const [searchParams] = useSearchParams();
     const lat = parseFloat(searchParams.get("lat"));
@@ -34,11 +34,19 @@ export default function CityPage({favorites, addFavorite}) {
     const wind = weatherData?.wind;
     const country = weatherData?.sys?.country
 
-    const isFavorite = favorites.some((city) => city.lon === coordinates.lon && city.lat === coordinates.lat)
+    const isFavorite = favorites?.some((city) => city.lon === coordinates.lon && city.lat === coordinates.lat)
 
     function handleFavorite() {
       const newFavorite = {
-        
+        name: weatherData.name,
+        lat, 
+        lon, 
+        country
+      }
+      if (isFavorite) {
+        removeFavorite(lat, lon)
+      } else {
+        addFavorite(newFavorite)
       }
     }
 
