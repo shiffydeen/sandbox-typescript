@@ -8,6 +8,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 
 export default function CityPage({favorites, addFavorite, removeFavorite}) {
     const params = useParams();
+    // console.log(params)
     const [searchParams] = useSearchParams();
     const lat = parseFloat(searchParams.get("lat"));
     const lon = parseFloat(searchParams.get("lon"));
@@ -50,7 +51,7 @@ export default function CityPage({favorites, addFavorite, removeFavorite}) {
       }
     }
 
-    console.log(isFavorite)
+    // console.log(isFavorite)
 
     const weatherDetails = [
     {
@@ -101,7 +102,7 @@ export default function CityPage({favorites, addFavorite, removeFavorite}) {
   
     const nextDays = Object.values(dailyForecasts || {}).slice(1, 6);
 
-    console.log(weatherData)
+    // console.log(weatherData)
 
      const formatTemp = (temp) => {
     // if (!temp) return 
@@ -128,7 +129,7 @@ export default function CityPage({favorites, addFavorite, removeFavorite}) {
         setForecastLoading(true)
         const res = await fetch(`https://pro.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&units=metric&appid=${API_KEY}`);
         const data = await res.json();
-        console.log(data)
+        // console.log(data)
         setForecast(data)
         setForecastLoading(false)
     } catch (error) {

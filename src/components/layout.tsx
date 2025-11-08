@@ -31,7 +31,7 @@ export default function Layout({children, favorites, history, addHistory, clearH
   }
 
   function handleSelect(cityData) {
-    // console.log(cityData)
+    console.log(cityData)
     const [lat, lon, name, country] = cityData.split("|")
     // console.log({
     //   lat, lon, name, country
@@ -71,7 +71,6 @@ export default function Layout({children, favorites, history, addHistory, clearH
                   <CommandInput placeholder="Search cities..." value={query} onValueChange={setQuery}/>
                   <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
-
                     {
                       favorites.length > 0 && (
                         <>
@@ -128,7 +127,7 @@ export default function Layout({children, favorites, history, addHistory, clearH
                               {/* {format(item.searchedAt, "MMM d, h:mm a")} */}
                             </span>
                           </CommandItem>
-                  ))}
+                        ))}
 
                       </CommandGroup>
                     </>)
@@ -149,11 +148,6 @@ export default function Layout({children, favorites, history, addHistory, clearH
                         </CommandItem>
                       ))}
                     </CommandGroup>)}
-
-                    
-                    
-                    
-                  
                   </CommandList>
                 </Command>     
               </CommandDialog>
